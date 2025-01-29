@@ -5,6 +5,7 @@ import com.example.examen.GestionLibros.repositorios.ReservaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReservaService {
@@ -17,6 +18,22 @@ public class ReservaService {
 
     public Reserva crearReserva(Reserva reserva) {
         return reservaRepository.save(reserva);
+    }
+
+    public Reserva modificarReserva(Long id, Reserva nuevaReserva) {
+        Optional<Reserva> reservaExistente = reservaRepository.findById(id);
+        if (reservaExistente.isPresent()) {
+            Reserva reserva = reservaExistente.get();
+            reserva.setEvento(nuevaReserva.getEvento());
+            reserva.setFecha(nuevaReserva.getFecha());
+            reserva.setCantidadBoletos(nuevaReserva.getCantidadBoletos());
+            return reservaRepository.save(reserva);
+        }
+        return null;
+    }
+
+    public Iterable<Reserva> obtenerTodasLasReservas() {
+        return reservaRepository.findAll();
     }
 
     public List<Reserva> obtenerReservasPorUsuario(Long usuarioId) {
